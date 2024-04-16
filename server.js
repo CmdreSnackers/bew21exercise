@@ -27,29 +27,43 @@ let authors = [
 ];
 
 // Your routing and controller code goes here
+//home
 app.get("/", (req, res) => {
   res.send("Hello Main Page Here");
 });
 
+//books
 app.get("/books", (req, res) => {
   res.json(books);
 });
 app.get("/books/:id", (req, res) => {
-  const book = books.find((b) => b.id === req.params.id);
+  const book_id = books.find((b) => b.id === req.params.id);
+  console.log(book_id);
+  const author = authors.find((a) => a.id === book_id.authorId);
+  const book = { ...book_id, name: author.name, bio: author.bio };
   res.json(book);
 });
 
+//reviews
 app.get("/reviews", (req, res) => {
   res.json(reviews);
 });
 app.get("/reviews/:id", (req, res) => {
-  const review = reviews.find((r) => r.id === req.params.id);
+  const review_id = reviews.find((r) => r.id === req.params.id);
+  const book_id = books.find((b) => b.id === review_id.bookId);
+  const review = {
+    ...review_id,
+    book_id: book_id.id,
+    book_title: book_id.title,
+  };
   res.json(review);
 });
 
+//authors
 app.get("/authors", (req, res) => {
   res.json(authors);
 });
+
 app.get("/authors/:id", (req, res) => {
   const author = authors.find((a) => a.id === req.params.id);
   res.json(author);
